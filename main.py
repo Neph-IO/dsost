@@ -3,6 +3,7 @@ import json
 import vlc
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QSlider, QVBoxLayout, QWidget, QLabel, QComboBox
 from PyQt5.QtCore import Qt, QTimer
+import random
 
 class AudioPlayer(QMainWindow):
     def __init__(self, json_file):
@@ -44,6 +45,10 @@ class AudioPlayer(QMainWindow):
         # Create the Play/Pause button
         self.play_pause_button = QPushButton("Play", self)
         self.play_pause_button.clicked.connect(self.toggle_play_pause)
+
+        # Create Next random button
+        self.random_play_button = QPushButton("Play Random", self)
+        self.random_play_button.clicked.connect(self.play_random_song)
         
         # Create the volume slider
         self.volume_slider = QSlider(Qt.Horizontal, self)
@@ -62,6 +67,7 @@ class AudioPlayer(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.playlist_selector)
         layout.addWidget(self.play_pause_button)
+        layout.addWidget(self.random_play_button)
         layout.addWidget(self.np_label)
         layout.addWidget(self.volume_label)
         layout.addWidget(self.volume_slider)
@@ -85,23 +91,39 @@ class AudioPlayer(QMainWindow):
             print(f"Playlist sélectionnée : {self.current_playlist['name']}")  # Debug
 
     def toggle_play_pause(self):
-        # Toggle between play and pause
+        # If the player is currently playing, pause it
         if self.player.is_playing():
             self.player.pause()
             self.play_pause_button.setText("Play")
         else:
-            if not self.current_playlist:
-                print("Aucune playlist sélectionnée.")  # Debug
-                return
-            
-            # Charger et jouer la première chanson de la playlist sélectionnée
-            media = self.instance.media_new(self.current_playlist['urls'][0])
-            self.player.set_media(media)
-            self.player.play()
-            self.play_pause_button.setText("Buffering")
-            
+            # If the player is paused, resume playback without reloading the song
+            if self.player.get_state() == vlc.State.Paused:
+                self.player.play()
+                self.play_pause_button.setText("Pause")
+            else:
+                self.play_random_song()
+
             # Check buffering state
             self.check_buffering()
+
+    def play_random_song(self):
+        if not self.current_playlist:
+            print("No playlist selected.")  # Debug
+            return
+
+        # Choose a random song from the current playlist
+        random_index = random.randint(0, len(self.current_playlist['urls']) - 1)
+        random_url = self.current_playlist['urls'][random_index]
+        
+        # Load and play the random song
+        media = self.instance.media_new(random_url)
+        self.player.set_media(media)
+        self.player.play()
+        self.play_pause_button.setText("Pause")  # Update play/pause button text to "Pause"
+        self.np_label.setText(f"Now Playing: {self.current_playlist['name']} - Track {random_index + 1}")
+        
+        # Check buffering state
+        self.check_buffering()
 
     def check_buffering(self):
         # Create a timer to check the state
