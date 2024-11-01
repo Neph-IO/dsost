@@ -1,4 +1,4 @@
-# dsost
+# Dark Souls OST Player
 This is a simple music streamer project for my understanding of git, python, and flatpak.
 
 
