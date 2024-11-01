@@ -1,7 +1,7 @@
 import sys
 import json
 import vlc
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QSlider, QVBoxLayout, QWidget, QLabel, QComboBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QSlider, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QComboBox
 from PyQt5.QtCore import Qt, QTimer
 import random
 
@@ -17,9 +17,20 @@ class AudioPlayer(QMainWindow):
         self.playlists = self.load_playlists(json_file)
         self.current_playlist = None  # Playlist currently selected
         
+        # Read version from VERSION file
+        self.version = self.read_version()
+        
         # Set up the user interface
         self.init_ui()
-
+    
+    def read_version(self):
+        try:
+            with open("VERSION", "r") as file:
+                return file.readline().strip()
+        except FileNotFoundError:
+            print("VERSION file not found. Using default version.")
+            return "NO VER FILE"
+        
     def load_playlists(self, json_file):
         try:
             with open(json_file, 'r') as f:
@@ -30,6 +41,7 @@ class AudioPlayer(QMainWindow):
             return []
 
     def init_ui(self):
+        version = "0.1.1"
         # Set window properties
         self.setWindowTitle("Dark Souls OST player")
         self.setGeometry(100, 100, 400, 200)
@@ -42,14 +54,16 @@ class AudioPlayer(QMainWindow):
         
         self.playlist_selector.currentIndexChanged.connect(self.select_playlist)
 
-        # Create the Play/Pause button
+        # Create the Play/Pause button with fixed size
         self.play_pause_button = QPushButton("Play", self)
+        self.play_pause_button.setFixedSize(60, 30)  # Set button size to ~1 cm
         self.play_pause_button.clicked.connect(self.toggle_play_pause)
 
-        # Create Next random button
-        self.random_play_button = QPushButton("Play Random", self)
+        # Create Next random button with fixed size
+        self.random_play_button = QPushButton("Random", self)
+        self.random_play_button.setFixedSize(60, 30)   # Set button size to ~1 cm
         self.random_play_button.clicked.connect(self.play_random_song)
-        
+            
         # Create the volume slider
         self.volume_slider = QSlider(Qt.Horizontal, self)
         self.volume_slider.setRange(0, 100)
@@ -62,15 +76,31 @@ class AudioPlayer(QMainWindow):
 
         # NowPlaying label
         self.np_label = QLabel("Now Playing:", self)
-        
-        # Set layout
+
+        # Add a small label for the version number in the bottom right
+        version_label = QLabel(self.version, self)
+        version_label.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        version_label.setStyleSheet("font-size: 10px; color: gray;")  # Small font, subtle color
+
+        # Create a layout for version label
+        version_layout = QHBoxLayout()
+        version_layout.addStretch()  # Push label to the right
+        version_layout.addWidget(version_label)
+
+        # Set horizontal Layout
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.play_pause_button)
+        button_layout.addWidget(self.random_play_button)
+        button_layout.setAlignment(Qt.AlignLeft)  # Align buttons to the left side
+
+        # Set Vertical layout
         layout = QVBoxLayout()
         layout.addWidget(self.playlist_selector)
-        layout.addWidget(self.play_pause_button)
-        layout.addWidget(self.random_play_button)
+        layout.addLayout(button_layout)
         layout.addWidget(self.np_label)
         layout.addWidget(self.volume_label)
         layout.addWidget(self.volume_slider)
+        layout.addLayout(version_layout)
         
         # Set the main widget and layout
         container = QWidget()
@@ -105,7 +135,7 @@ class AudioPlayer(QMainWindow):
 
             # Check buffering state
             self.check_buffering()
-
+    
     def play_random_song(self):
         if not self.current_playlist:
             print("No playlist selected.")  # Debug
@@ -119,7 +149,6 @@ class AudioPlayer(QMainWindow):
         media = self.instance.media_new(random_url)
         self.player.set_media(media)
         self.player.play()
-        self.play_pause_button.setText("Pause")  # Update play/pause button text to "Pause"
         self.np_label.setText(f"Now Playing: {self.current_playlist['name']} - Track {random_index + 1}")
         
         # Check buffering state
@@ -135,6 +164,7 @@ class AudioPlayer(QMainWindow):
                 self.play_pause_button.setText("Pause")
             else:
                 self.play_pause_button.setText("Play")
+                
 
         # Use a QTimer to periodically check the state
         timer = QTimer(self)
