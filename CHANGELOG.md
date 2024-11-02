@@ -3,6 +3,10 @@
 ## [Unreleased]
 - Development in progress.
 
+## [0.4.0] - 2024-11-03
+- UI impovement (now i feel like showing it to my mom)
+- add favicon
+
 ## [0.3.0] - 2024-11-03
 - Updating the UI to be smaller and more aligned with itself
 - changed button to be icons
