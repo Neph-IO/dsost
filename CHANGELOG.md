@@ -17,3 +17,7 @@
 - Add VERSION FILE cuz it's easier to write here than the in spagetti code
 - Fixed Pause button starting a new song even when data are in buffer.
 - Changed interfaces to have 2 buttons closes to eachothers
+
+## [0.2.1] - 2024-11-03
+- separated Ui to another file becauces it looks cleaner this way
+- Dark souls 1 playlist done.
