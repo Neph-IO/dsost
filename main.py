@@ -4,7 +4,8 @@ import vlc
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QTimer
 import random
-from ui import AudioPlayerUI  # Import UI depuis ui.py
+import os
+from ui import AudioPlayerUI  # Import UI from ui.py
 
 class AudioPlayer(QMainWindow):
     def __init__(self, json_file):
@@ -22,7 +23,7 @@ class AudioPlayer(QMainWindow):
         self.version = self.read_version()
         
         # Set up the user interface
-        AudioPlayerUI(self)  # Instancier l'interface utilisateur
+        AudioPlayerUI(self)  # Instantiate the user interface
     
     def read_version(self):
         try:
@@ -35,10 +36,10 @@ class AudioPlayer(QMainWindow):
     def load_playlists(self, json_file):
         try:
             with open(json_file, 'r') as f:
-                data = json.load(f)  # Charger le JSON
+                data = json.load(f)  # Load JSON data
                 return data['playlists']  # Return the playlists
         except Exception as e:
-            print(f"Erreur lors du chargement des playlists : {e}")
+            print(f"Error loading playlists: {e}")
             return []
 
     def select_playlist(self):
@@ -47,16 +48,16 @@ class AudioPlayer(QMainWindow):
             self.current_playlist = self.playlists[index]
             self.player.stop()
             self.np_label.setText(f"Now Playing: {self.current_playlist['name']}")
-            print(f"Playlist sélectionnée : {self.current_playlist['name']}")
+            print(f"Selected playlist: {self.current_playlist['name']}")
 
     def toggle_play_pause(self):
         if self.player.is_playing():
             self.player.pause()
-            self.play_pause_button.setText("Play")
+            self.play_pause_button.setText("▶")
         else:
             if self.player.get_state() == vlc.State.Paused:
                 self.player.play()
-                self.play_pause_button.setText("Pause")
+                self.play_pause_button.setText("⏸")
             else:
                 self.play_random_song()
 
@@ -67,14 +68,25 @@ class AudioPlayer(QMainWindow):
             print("No playlist selected.")
             return
 
+        # Select a random track from the playlist
         random_index = random.randint(0, len(self.current_playlist['urls']) - 1)
         random_url = self.current_playlist['urls'][random_index]
         
+        # Load the media and start playing
         media = self.instance.media_new(random_url)
+        media.parse()  # Retrieve media metadata
         self.player.set_media(media)
         self.player.play()
-        self.np_label.setText(f"Now Playing: {self.current_playlist['name']} - Track {random_index + 1}")
+
+        # Get the title from media metadata
+        track_title = media.get_meta(vlc.Meta.Title)
+        if not track_title:  # If no metadata title is found, use the filename as fallback
+            track_title = os.path.basename(random_url)
+
+        # Update the display with the track title
+        self.np_label.setText(f"Now Playing: {track_title}")
         
+        # Check buffering state
         self.check_buffering()
 
     def check_buffering(self):
@@ -83,9 +95,9 @@ class AudioPlayer(QMainWindow):
             if self.player.get_state() in (vlc.State.Buffering, vlc.State.Opening):
                 self.play_pause_button.setText("Buffering")
             elif self.player.is_playing():
-                self.play_pause_button.setText("Pause")
+                self.play_pause_button.setText("⏸")
             else:
-                self.play_pause_button.setText("Play")
+                self.play_pause_button.setText("▶")
                 
         timer = QTimer(self)
         timer.timeout.connect(update_state)
