@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushBu
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsOpacityEffect
 
+
 class AudioPlayerUI:
     def __init__(self, main_window):
         self.main_window = main_window
@@ -13,24 +14,26 @@ class AudioPlayerUI:
         self.main_window.setWindowTitle("Dark Souls OST player")
         self.main_window.setGeometry(100, 100, 400, 100)
         self.main_window.setFixedSize(400, 100)
+        #Define here img src
+        bgpath = "../data/bg.jpg"
 
         # Define a global stylesheet for the text color
         self.main_window.setStyleSheet("color: #ebdbb2;")
 
         # Set an empty icon to remove the icon from the title bar
-        self.main_window.setWindowIcon(QIcon("bg.jpg")) 
+        self.main_window.setWindowIcon(QIcon(bgpath)) 
 
         # Create a QLabel for the background image
         self.background_label = QLabel(self.main_window)
         self.background_label.setGeometry(self.main_window.rect())
-        self.background_pixmap = QPixmap("bg.jpg") 
+        self.background_pixmap = QPixmap(bgpath) 
         self.background_label.setPixmap(self.background_pixmap)
         self.background_label.setScaledContents(True)
         self.background_label.lower()  # Send the QLabel to the background
 
         # Set opacity for the background image
         opacity_effect = QGraphicsOpacityEffect()
-        opacity_effect.setOpacity(0.3)  # Set the desired opacity (0.0 = fully transparent, 1.0 = fully opaque)
+        opacity_effect.setOpacity(0.3)
         self.background_label.setGraphicsEffect(opacity_effect)
 
         # Main container for the interface elements
@@ -64,7 +67,6 @@ class AudioPlayerUI:
 
         # Labels
         self.main_window.np_label = QLabel("Now Playing:", main_container)
-        #self.main_window.np_label.setStyleSheet("background-color: rgba(0, 0, 0, 150); color: white;")  # Semi-transparent black background with white text
         version_label = QLabel(self.main_window.version, main_container)
         version_label.setAlignment(Qt.AlignRight)
         version_label.setStyleSheet("font-size: 10px; color: gray;")
@@ -77,8 +79,8 @@ class AudioPlayerUI:
 
         # Layout to position the buttons to the left of the playlist selector
         control_layout = QHBoxLayout()
-        control_layout.addWidget(self.main_window.play_pause_button)  # Add Play button first
-        control_layout.addWidget(self.main_window.random_play_button)  # Add Random button next
+        control_layout.addWidget(self.main_window.play_pause_button)  
+        control_layout.addWidget(self.main_window.random_play_button) 
         control_layout.addWidget(self.main_window.playlist_selector)  # Playlist selector to the right of the buttons
 
         # Top layout with control layout and volume slider aligned to the center

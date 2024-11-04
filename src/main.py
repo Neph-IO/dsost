@@ -11,8 +11,8 @@ class AudioPlayer(QMainWindow):
     def __init__(self, json_file):
         super().__init__()
         
-        # Initialize VLC
-        self.instance = vlc.Instance('--network-caching=500')  # Use VLC caching
+        # Initialize VLC with VLC caching
+        self.instance = vlc.Instance('--network-caching=500')  
         self.player = self.instance.media_player_new()
         
         # Load playlists from JSON
@@ -25,23 +25,26 @@ class AudioPlayer(QMainWindow):
         # Set up the user interface
         AudioPlayerUI(self)  # Instantiate the user interface
     
+    #Simple Version reader (i want a file instead of variable)
     def read_version(self):
         try:
-            with open("VERSION", "r") as file:
+            with open("../data/VERSION", "r") as file:
                 return file.readline().strip()
         except FileNotFoundError:
             print("VERSION file not found. Using default version.")
             return "NO VER FILE"
-        
+
+    # Load JSON data and return the playlist
     def load_playlists(self, json_file):
         try:
             with open(json_file, 'r') as f:
-                data = json.load(f)  # Load JSON data
-                return data['playlists']  # Return the playlists
+                data = json.load(f)  
+                return data['playlists']
         except Exception as e:
             print(f"Error loading playlists: {e}")
             return []
-
+    
+    #Selecte the playlist and show it in label
     def select_playlist(self):
         index = self.playlist_selector.currentIndex()
         if index >= 0 and index < len(self.playlists):
@@ -107,7 +110,7 @@ class AudioPlayer(QMainWindow):
         self.player.audio_set_volume(value)
 
 if __name__ == '__main__':
-    json_file = 'playlists.json'
+    json_file = '../data/playlists.json'
     
     app = QApplication(sys.argv)
     player = AudioPlayer(json_file)

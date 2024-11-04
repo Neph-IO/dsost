@@ -10,4 +10,10 @@ __pycache__/
 trial.py
 build/
 dist/
+# Ignore flatpakbuild folder
 
+flatpak_build/
+
+# Autres fichiers générés par Flatpak
+*.flatpak
+*.flatpakref
