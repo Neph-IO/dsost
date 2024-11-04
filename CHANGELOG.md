@@ -7,6 +7,7 @@
 - Reorganisation of the project in /data and /src, it looks like best practice
 - Configuration of the project flatpak ready
 - Cleaning some useless comment and old code
+- Fucked up my Gitpush so redoing it
 
 ## [0.4.0] - 2024-11-03
 - UI impovement (now i feel like showing it to my mom)
