@@ -8,9 +8,10 @@ For now you need a VLC player installed.
 All the other Audio library used untill now (pygame, sounddevice, pyaudio, simplesound) the buffering sucks
 
 # TO-DO
-Use something else than python-vlc to take care of buffering and audio Find a way to make other Libs's buffering smoth (no chop between 2 buffers)
-Or
-Embark vlc library in environment
+~~Use something else than python-vlc to take care of buffering and audio Find a way to make other Libs's buffering smoth (no chop between 2 buffers)~~
+~~Or~~
+~~Embark vlc library in environment~~
+- Create a flatpak
 
 
 # Disclaimer

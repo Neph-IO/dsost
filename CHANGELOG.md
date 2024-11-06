@@ -3,6 +3,14 @@
 ## [Unreleased]
 - Development in progress.
 
+## [0.6.0] - 2024-11-06
+- Completely remove python-vlc from the project it's not usefull to have it installed
+- Migrated the project to Gstreamer to handle the streaming process
+- Reworked the UI to look better i think, i can't try on 4k screen so it might be to small on them
+- Cleaned some useless comented code
+- reworked the icon to have rounded angles (more icon'ish)
+
+
 ## [0.5.0] - 2024-11-04
 - Reorganisation of the project in /data and /src, it looks like best practice
 - Configuration of the project flatpak ready

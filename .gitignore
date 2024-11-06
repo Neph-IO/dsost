@@ -13,7 +13,8 @@ dist/
 # Ignore flatpakbuild folder
 
 flatpak_build/
-
+.flatpak-builder/
 # Autres fichiers générés par Flatpak
 *.flatpak
 *.flatpakref
+launch.sh
