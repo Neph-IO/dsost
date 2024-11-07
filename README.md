@@ -22,7 +22,9 @@ Debian:
 ~~Use something else than python-vlc to take care of buffering and audio Find a way to make other Libs's buffering smoth (no chop between 2 buffers)~~
 ~~Or~~
 ~~Embark vlc library in environment~~
-- Create a flatpak
+- ~~Create a flatpak~~
+- Check if flatpak is realy working well
+- Upload the flatpak to flathub
 
 
 # Disclaimer
