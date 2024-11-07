@@ -17,4 +17,4 @@ flatpak_build/
 # Autres fichiers générés par Flatpak
 *.flatpak
 *.flatpakref
-launch.sh
+
