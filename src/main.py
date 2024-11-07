@@ -15,8 +15,21 @@ from gi.repository import Gst, GObject, GLib
 Gst.init(None)
 
 class AudioPlayer(QMainWindow):
-    def __init__(self, json_file):
+    def __init__(self):
         super().__init__()
+
+        # Déterminer le chemin de base en fonction de l'environnement
+        if "FLATPAK_SANDBOX_DIR" in os.environ:
+            # Environnement Flatpak : utiliser /app
+            base_path = "/app"
+        else:
+            # Environnement local : remonter d'un dossier par rapport à ce script
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        # Définir les chemins vers les ressources en utilisant base_path
+        self.data_path = os.path.join(base_path, "data")
+        json_file = os.path.join(self.data_path, "playlists.json")
+        version_file = os.path.join(self.data_path, "VERSION")
 
         # Initialize GStreamer pipeline
         self.player = Gst.ElementFactory.make("playbin", "player")
@@ -28,7 +41,7 @@ class AudioPlayer(QMainWindow):
         self.current_playlist = None  # Playlist currently selected
 
         # Read version from VERSION file
-        self.version = self.read_version()
+        self.version = self.read_version(version_file)
 
         # Set up the user interface
         AudioPlayerUI(self)  # Instantiate the user interface
@@ -38,9 +51,9 @@ class AudioPlayer(QMainWindow):
         bus.add_signal_watch()
         bus.connect("message", self.on_message)
 
-    def read_version(self):
+    def read_version(self, version_file):
         try:
-            with open("../data/VERSION", "r") as file:
+            with open(version_file, "r") as file:
                 return file.readline().strip()
         except FileNotFoundError:
             print("VERSION file not found. Using default version.")
@@ -96,7 +109,6 @@ class AudioPlayer(QMainWindow):
 
         # Mettre à jour l'affichage du titre de la piste
         track_title = os.path.basename(random_url).split('?')[0].replace('_', ' ').replace('%20', ' ').replace('.mp3', '').replace('.flac', '').replace('.wav', '').replace('.aac', '').replace('.ogg', '')
-        #track_title = os.path.basename(random_url)
         self.np_label.setText(f"Now Playing: {track_title}")
 
         # Passer à l'état PLAYING
@@ -121,9 +133,10 @@ class AudioPlayer(QMainWindow):
                 self.play_pause_button.setText("⏸")
         elif msg_type == Gst.MessageType.EOS:
             # End of Stream
-            print("End of Stream")
+            print("End of Stream going to next one")
             self.player.set_state(Gst.State.NULL)
             self.play_pause_button.setText("▶")
+            self.play_random_song()
         elif msg_type == Gst.MessageType.ERROR:
             # Handle errors
             err, debug = message.parse_error()
@@ -147,10 +160,8 @@ class AudioPlayer(QMainWindow):
         super().closeEvent(event)
 
 if __name__ == '__main__':
-    json_file = '../data/playlists.json'
-
     app = QApplication(sys.argv)
-    player = AudioPlayer(json_file)
+    player = AudioPlayer()
     player.show()
 
     sys.exit(app.exec_())

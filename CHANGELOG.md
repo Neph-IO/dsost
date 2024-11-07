@@ -3,6 +3,15 @@
 ## [Unreleased]
 - Development in progress.
 
+## [0.7.0] - 2024-11-07
+- First Flatpak build Done
+- Finishing removing VLC references
+- Prepared the project to be FLATPACK Compatible (Flatpak-pip-generator)
+- Check if the project runs on Host or Flatpak to define path
+- Cleaned some useless comented code
+- Fix End of stream event by starting another song.
+- Fixed naming for flatpak packaging
+
 ## [0.6.0] - 2024-11-06
 - Completely remove python-vlc from the project it's not usefull to have it installed
 - Migrated the project to Gstreamer to handle the streaming process
