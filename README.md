@@ -16,7 +16,7 @@ This is a simple music streamer project for my understanding of git, python, and
 ~~Or~~
 ~~Embark vlc library in environment~~
 - ~~Create a flatpak~~
-- Check if flatpak is realy working well
+- ~~Check if flatpak is realy working well~~
 - Upload the flatpak to flathub
 
 
