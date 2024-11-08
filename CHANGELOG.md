@@ -1,7 +1,9 @@
 # Changelog
 
-## [Unreleased]
-- Development in progress.
+
+## [1.0.0] - 2024-11-08
+- After a bit of testing i think i'm ready for a 1.0 it look stable enough
+- Formating to be ready to host on flathub
 
 ## [0.7.0] - 2024-11-07
 - First Flatpak build Done
