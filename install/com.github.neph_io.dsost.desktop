@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Dark Souls OST
+Comment=Simple Dark Souls OST player
+Exec=/app/bin/launch.sh
+Icon=com.github.neph.io.dsost
+Terminal=false
+Type=Application
+Categories=AudioVideo;Player;Music;
