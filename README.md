@@ -4,7 +4,7 @@ This is a simple music streamer project for my understanding of git, python, and
 
 
 
-## Download
+## Download Lastest build
 [![Latest Release](https://img.shields.io/github/v/release/Neph-IO/dsost)](https://github.com/Neph-IO/dsost/releases/latest)
 
 
