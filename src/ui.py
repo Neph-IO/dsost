@@ -20,7 +20,7 @@ class AudioPlayerUI:
 
         # Chemins des ressources
         data_path = os.path.join(base_path, "data")
-        bg_path = os.path.join(data_path, "bg.jpg")
+        bg_path = os.path.join(data_path, "bg.png")
         icon_path = os.path.join(data_path, "dsicon.png")
 
         # Set window properties
